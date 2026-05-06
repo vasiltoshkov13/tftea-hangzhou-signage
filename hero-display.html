@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TFTea — Valley of Roses</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Playfair+Display:wght@400;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0a0a0a;
+    --rose: #C97B8A;
+    --gold: #D4AF37;
+    --text: #F5F0EB;
+    --text-muted: #9A9490;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Serif SC', 'Playfair Display', serif;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+    cursor: none;
+  }
+
+  .slide {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 1.5s ease;
+    pointer-events: none;
+  }
+
+  .slide.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  /* ── SLIDE 1: BRAND INTRO ── */
+  .slide-brand {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .slide-brand .logo {
+    font-size: 72px;
+    font-weight: 700;
+    color: var(--rose);
+    letter-spacing: 8px;
+    animation: fadeInUp 2s ease;
+  }
+
+  .slide-brand .sub {
+    font-size: 24px;
+    color: var(--gold);
+    letter-spacing: 6px;
+    margin-top: 8px;
+    animation: fadeInUp 2s ease 0.3s both;
+  }
+
+  .slide-brand .cn {
+    font-size: 28px;
+    color: var(--text);
+    margin-top: 12px;
+    animation: fadeInUp 2s ease 0.6s both;
+  }
+
+  .slide-brand .tagline {
+    font-size: 18px;
+    color: var(--text-muted);
+    margin-top: 24px;
+    max-width: 600px;
+    line-height: 1.6;
+    animation: fadeInUp 2s ease 0.9s both;
+  }
+
+  /* ── SLIDE 2-6: PRODUCT SLIDES ── */
+  .slide-product {
+    flex-direction: row;
+    padding: 60px 80px;
+    gap: 60px;
+  }
+
+  .product-left {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .product-icon {
+    font-size: 80px;
+    margin-bottom: 20px;
+  }
+
+  .product-tier {
+    display: inline-block;
+    font-size: 14px;
+    padding: 4px 16px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+    color: var(--bg);
+    font-weight: 700;
+    letter-spacing: 2px;
+  }
+
+  .tier-classic { background: var(--text-muted); }
+  .tier-premium { background: var(--gold); }
+  .tier-signature { background: var(--rose); }
+
+  .product-name {
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.1;
+  }
+
+  .product-name-cn {
+    font-size: 32px;
+    color: var(--gold);
+    margin-top: 8px;
+  }
+
+  .product-profile {
+    font-size: 18px;
+    color: var(--text-muted);
+    margin-top: 20px;
+    line-height: 1.6;
+    max-width: 500px;
+  }
+
+  .product-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 24px;
+  }
+
+  .recipe-visual {
+    background: rgba(255,255,255,0.04);
+    border-radius: 20px;
+    padding: 28px 32px;
+  }
+
+  .recipe-title {
+    font-size: 13px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 16px;
+  }
+
+  .recipe-bar {
+    height: 48px;
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+  }
+
+  .recipe-bar div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--bg);
+  }
+
+  .ingredient-legend {
+    display: flex;
+    gap: 16px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+
+  .legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+  }
+
+  .brew-card {
+    background: rgba(201,123,138,0.1);
+    border-radius: 16px;
+    padding: 24px 28px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .brew-card .icon { font-size: 40px; }
+
+  .brew-card .info .temp {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--rose);
+  }
+
+  .brew-card .info .time {
+    font-size: 16px;
+    color: var(--text-muted);
+  }
+
+  .brew-card .info .cn-note {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  /* ── SLIDE 7: HERITAGE ── */
+  .slide-heritage {
+    flex-direction: column;
+    text-align: center;
+    padding: 60px;
+  }
+
+  .heritage-title {
+    font-size: 42px;
+    color: var(--rose);
+    margin-bottom: 8px;
+  }
+
+  .heritage-sub {
+    font-size: 20px;
+    color: var(--gold);
+    margin-bottom: 40px;
+  }
+
+  .heritage-grid {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+  }
+
+  .heritage-card {
+    background: rgba(255,255,255,0.04);
+    border-radius: 20px;
+    padding: 32px 40px;
+    text-align: center;
+  }
+
+  .heritage-card .number {
+    font-size: 56px;
+    font-weight: 700;
+    color: var(--gold);
+  }
+
+  .heritage-card .label {
+    font-size: 16px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  .heritage-card .cn {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  /* ── SLIDE 8: CTA ── */
+  .slide-cta {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .cta-icon { font-size: 80px; margin-bottom: 24px; }
+
+  .cta-text {
+    font-size: 36px;
+    color: var(--text);
+    max-width: 700px;
+    line-height: 1.4;
+  }
+
+  .cta-text .highlight {
+    color: var(--rose);
+  }
+
+  .cta-sub {
+    font-size: 20px;
+    color: var(--gold);
+    margin-top: 16px;
+  }
+
+  .cta-small {
+    font-size: 16px;
+    color: var(--text-muted);
+    margin-top: 24px;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── PROGRESS BAR ── */
+  .progress-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    background: var(--rose);
+    transition: width linear;
+    z-index: 100;
+  }
+
+  /* ── CORNER WATERMARK ── */
+  .watermark {
+    position: fixed;
+    bottom: 12px;
+    right: 20px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.15);
+    letter-spacing: 2px;
+    z-index: 100;
+  }
+</style>
+</head>
+<body>
+
+<div class="watermark">TFTea · Trésor de Fleur · 保加利亚玫瑰花园</div>
+<div class="progress-bar" id="progress"></div>
+
+<!-- SLIDE 0: BRAND -->
+<div class="slide slide-brand active" data-duration="8">
+  <div class="logo">TFTea</div>
+  <div class="sub">TRÉSOR DE FLEUR</div>
+  <div class="cn">保加利亚玫瑰花园 · 来自玫瑰谷的珍宝</div>
+  <div class="tagline">Where Bulgarian Damask roses meet China's finest teas. A garden in every cup.</div>
+</div>
+
+<!-- SLIDE 1: GREEN ROSE -->
+<div class="slide slide-product" data-duration="10">
+  <div class="product-left">
+    <div class="product-icon">🌿</div>
+    <span class="product-tier tier-classic">CLASSIC 经典</span>
+    <div class="product-name">Green Rose</div>
+    <div class="product-name-cn">永春花园 · Garden of Eternal Spring</div>
+    <div class="product-profile">Fresh, grassy green tea meets romantic Damask rose. A clean, vibrant cup with a floral finish that lingers.</div>
+  </div>
+  <div class="product-right">
+    <div class="recipe-visual">
+      <div class="recipe-title">Recipe 配方</div>
+      <div class="recipe-bar">
+        <div style="width:85%; background:#7BA98F;">85%</div>
+        <div style="width:15%; background:#C97B8A;">15%</div>
+      </div>
+      <div class="ingredient-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#7BA98F;"></div> Green Tea 绿茶</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#C97B8A;"></div> Rose Buds 玫瑰花蕾</div>
+      </div>
+    </div>
+    <div class="brew-card">
+      <div class="icon">🫖</div>
+      <div class="info">
+        <div class="temp">80°C · 3 min</div>
+        <div class="time">Fresh & floral · 清新花香</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 2: WHITE ROSE -->
+<div class="slide slide-product" data-duration="10">
+  <div class="product-left">
+    <div class="product-icon">🤍</div>
+    <span class="product-tier tier-classic">CLASSIC 经典</span>
+    <div class="product-name">White Rose</div>
+    <div class="product-name-cn">银瓣轻语 · Silver Petals Whisper</div>
+    <div class="product-profile">Delicate Silver Needle woven with rose petals. Honey notes dance with soft rose perfume — silky, ethereal, unforgettable.</div>
+  </div>
+  <div class="product-right">
+    <div class="recipe-visual">
+      <div class="recipe-title">Recipe 配方</div>
+      <div class="recipe-bar">
+        <div style="width:85%; background:#E8DDD0; color:#333;">85%</div>
+        <div style="width:15%; background:#C97B8A;">15%</div>
+      </div>
+      <div class="ingredient-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#E8DDD0;"></div> Silver Needle 白毫银针</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#C97B8A;"></div> Rose Buds 玫瑰花蕾</div>
+      </div>
+    </div>
+    <div class="brew-card">
+      <div class="icon">🫖</div>
+      <div class="info">
+        <div class="temp">75°C · 4 min</div>
+        <div class="time">Delicate & honey · 细腻蜜香</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 3: BLACK ROSE -->
+<div class="slide slide-product" data-duration="10">
+  <div class="product-left">
+    <div class="product-icon">🖤</div>
+    <span class="product-tier tier-classic">CLASSIC 经典</span>
+    <div class="product-name">Black Rose</div>
+    <div class="product-name-cn">绯红丝绒 · Crimson Velvet</div>
+    <div class="product-profile">Rich, malty Kung Fu black tea wrapped in sweet rose aroma. Bold yet refined — like velvet on the tongue.</div>
+  </div>
+  <div class="product-right">
+    <div class="recipe-visual">
+      <div class="recipe-title">Recipe 配方</div>
+      <div class="recipe-bar">
+        <div style="width:85%; background:#8B4513;">85%</div>
+        <div style="width:15%; background:#C97B8A;">15%</div>
+      </div>
+      <div class="ingredient-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#8B4513;"></div> Black Tea 功夫红茶</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#C97B8A;"></div> Rose Buds 玫瑰花蕾</div>
+      </div>
+    </div>
+    <div class="brew-card">
+      <div class="icon">🫖</div>
+      <div class="info">
+        <div class="temp">90°C · 3-4 min</div>
+        <div class="time">Rich & malty · 醇厚麦芽</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 4: IMPERIAL GARDEN -->
+<div class="slide slide-product" data-duration="10">
+  <div class="product-left">
+    <div class="product-icon">👑</div>
+    <span class="product-tier tier-premium">PREMIUM 尊享</span>
+    <div class="product-name">Imperial Garden</div>
+    <div class="product-name-cn">皇家花园 · Imperial Garden</div>
+    <div class="product-profile">Our most sophisticated blend. Silver Needle unfolds into a full Damask rose bouquet, finishing with a whisper of Provençal lavender.</div>
+  </div>
+  <div class="product-right">
+    <div class="recipe-visual">
+      <div class="recipe-title">Recipe 配方</div>
+      <div class="recipe-bar">
+        <div style="width:70%; background:#E8DDD0; color:#333;">70%</div>
+        <div style="width:20%; background:#C97B8A;">20%</div>
+        <div style="width:10%; background:#9B8EC4;">10%</div>
+      </div>
+      <div class="ingredient-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#E8DDD0;"></div> Silver Needle</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#C97B8A;"></div> Rose Buds</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#9B8EC4;"></div> Lavender 薰衣草</div>
+      </div>
+    </div>
+    <div class="brew-card">
+      <div class="icon">🫖</div>
+      <div class="info">
+        <div class="temp">75°C · 4 min</div>
+        <div class="time">Multi-layered luxury · 多层花香</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 5: BULGARIAN TRINITY -->
+<div class="slide slide-product" data-duration="10">
+  <div class="product-left">
+    <div class="product-icon">🌸</div>
+    <span class="product-tier tier-signature">SIGNATURE 招牌</span>
+    <div class="product-name">Bulgarian Trinity</div>
+    <div class="product-name-cn">保加利亚三宝 · Bulgarian Trinity</div>
+    <div class="product-profile">100% Bulgarian. Zero caffeine. Three treasures: rose for beauty, chamomile for calm, lavender for peace. The perfect evening ritual.</div>
+  </div>
+  <div class="product-right">
+    <div class="recipe-visual">
+      <div class="recipe-title">Recipe 配方</div>
+      <div class="recipe-bar">
+        <div style="width:50%; background:#C97B8A;">50%</div>
+        <div style="width:30%; background:#E8C84A; color:#333;">30%</div>
+        <div style="width:20%; background:#9B8EC4;">20%</div>
+      </div>
+      <div class="ingredient-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#C97B8A;"></div> Rose Buds 玫瑰</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#E8C84A;"></div> Chamomile 甘菊</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#9B8EC4;"></div> Lavender 薰衣草</div>
+      </div>
+    </div>
+    <div class="brew-card">
+      <div class="icon">🌙</div>
+      <div class="info">
+        <div class="temp">95°C · 5-7 min</div>
+        <div class="time">Caffeine-free herbal · 无咖啡因花草</div>
+        <div class="cn-note">100% Bulgarian · 100%保加利亚</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 6: HERITAGE -->
+<div class="slide slide-heritage" data-duration="8">
+  <div class="heritage-title">From the Valley of Roses</div>
+  <div class="heritage-sub">来自玫瑰谷 · Since 1908</div>
+  <div class="heritage-grid">
+    <div class="heritage-card">
+      <div class="number">1908</div>
+      <div class="label">Founded</div>
+      <div class="cn">创立年份</div>
+    </div>
+    <div class="heritage-card">
+      <div class="number">160ha</div>
+      <div class="label">Organic Plantation</div>
+      <div class="cn">有机种植园</div>
+    </div>
+    <div class="heritage-card">
+      <div class="number">400+</div>
+      <div class="label">Years of Heritage</div>
+      <div class="cn">年玫瑰传承</div>
+    </div>
+    <div class="heritage-card">
+      <div class="number">100%</div>
+      <div class="label">Bio Certified</div>
+      <div class="cn">有机认证</div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 7: CTA -->
+<div class="slide slide-cta" data-duration="6">
+  <div class="cta-icon">🌹</div>
+  <div class="cta-text">Taste the <span class="highlight">Rose Valley</span><br/>品尝<span class="highlight">玫瑰谷</span>的味道</div>
+  <div class="cta-sub">Visit our tasting station · 欢迎品鉴</div>
+  <div class="cta-small">B2B Wholesale Available · 提供批发合作</div>
+</div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+let current = 0;
+
+function showSlide(idx) {
+  slides.forEach((s, i) => {
+    s.classList.toggle('active', i === idx);
+  });
+  
+  const duration = parseInt(slides[idx].dataset.duration) * 1000;
+  const progress = document.getElementById('progress');
+  progress.style.transition = 'none';
+  progress.style.width = '0%';
+  
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      progress.style.transition = `width ${duration}ms linear`;
+      progress.style.width = '100%';
+    });
+  });
+  
+  setTimeout(() => {
+    current = (idx + 1) % slides.length;
+    showSlide(current);
+  }, duration);
+}
+
+// Start the loop
+showSlide(0);
+
+// Click to advance (for testing)
+document.addEventListener('click', () => {
+  current = (current + 1) % slides.length;
+  showSlide(current);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>TFTea — 保加利亚玫瑰花园</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Playfair+Display:wght@400;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  
+  :root {
+    --bg: #0a0a0a;
+    --card-bg: #141414;
+    --rose: #C97B8A;
+    --rose-light: #E8A0AF;
+    --gold: #D4AF37;
+    --gold-light: #E8C84A;
+    --text: #F5F0EB;
+    --text-muted: #9A9490;
+    --green: #7BA98F;
+    --white-tea: #E8DDD0;
+    --black-tea: #8B4513;
+    --lavender: #9B8EC4;
+    --chamomile: #E8C84A;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Serif SC', 'Playfair Display', serif;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+    touch-action: manipulation;
+  }
+
+  /* ── HOME SCREEN ── */
+  #home {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    padding: 20px;
+  }
+
+  .brand-header {
+    text-align: center;
+    padding: 15px 0;
+    border-bottom: 1px solid rgba(201,123,138,0.3);
+    margin-bottom: 15px;
+  }
+
+  .brand-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--rose);
+    letter-spacing: 2px;
+  }
+
+  .brand-header .subtitle {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-top: 4px;
+    letter-spacing: 4px;
+  }
+
+  .brand-header .cn-name {
+    font-size: 18px;
+    color: var(--gold);
+    margin-top: 2px;
+  }
+
+  .blend-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 10px;
+  }
+
+  .blend-card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 18px 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .blend-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 16px 16px 0 0;
+  }
+
+  .blend-card.green::before { background: linear-gradient(90deg, var(--green), var(--rose)); }
+  .blend-card.white::before { background: linear-gradient(90deg, var(--white-tea), var(--rose)); }
+  .blend-card.black::before { background: linear-gradient(90deg, var(--black-tea), var(--rose)); }
+  .blend-card.imperial::before { background: linear-gradient(90deg, var(--gold), var(--rose), var(--lavender)); }
+  .blend-card.trinity::before { background: linear-gradient(90deg, var(--rose), var(--chamomile), var(--lavender)); }
+
+  .blend-card:active {
+    transform: scale(0.97);
+    border-color: var(--rose);
+  }
+
+  .blend-icon {
+    font-size: 36px;
+    margin-bottom: 8px;
+  }
+
+  .blend-name {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+  }
+
+  .blend-name-cn {
+    font-size: 15px;
+    color: var(--gold);
+    margin-top: 2px;
+  }
+
+  .blend-tag {
+    display: inline-block;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-top: 8px;
+    color: var(--bg);
+    font-weight: 600;
+  }
+
+  .blend-tag.standard { background: var(--text-muted); }
+  .blend-tag.premium { background: var(--gold); }
+  .blend-tag.signature { background: var(--rose); }
+
+  .blend-profile {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 6px;
+    line-height: 1.4;
+  }
+
+  /* ── DETAIL SCREEN ── */
+  #detail {
+    display: none;
+    flex-direction: column;
+    height: 100vh;
+    padding: 0;
+    animation: slideIn 0.35s ease;
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(30px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .detail-header {
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid rgba(201,123,138,0.2);
+  }
+
+  .back-btn {
+    background: rgba(255,255,255,0.08);
+    border: none;
+    color: var(--text);
+    font-size: 24px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .back-btn:active { background: rgba(255,255,255,0.15); }
+
+  .detail-title {
+    flex: 1;
+  }
+
+  .detail-title h2 {
+    font-size: 22px;
+    color: var(--rose);
+  }
+
+  .detail-title .cn {
+    font-size: 16px;
+    color: var(--gold);
+  }
+
+  .detail-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 20px;
+  }
+
+  .section {
+    margin-bottom: 20px;
+  }
+
+  .section-title {
+    font-size: 13px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+
+  .recipe-bar {
+    display: flex;
+    height: 32px;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+
+  .recipe-bar div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--bg);
+  }
+
+  .ingredient-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .ingredient-chip {
+    background: rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 6px 12px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .brew-guide {
+    background: rgba(201,123,138,0.1);
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .brew-icon {
+    font-size: 32px;
+  }
+
+  .brew-details {
+    flex: 1;
+  }
+
+  .brew-details .temp {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--rose);
+  }
+
+  .brew-details .time {
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+
+  .profile-text {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--text);
+  }
+
+  .origin-badges {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .origin-badge {
+    background: rgba(212,175,55,0.15);
+    border: 1px solid rgba(212,175,55,0.3);
+    border-radius: 10px;
+    padding: 6px 12px;
+    font-size: 12px;
+    color: var(--gold);
+  }
+
+  /* ── BOTTOM NAV ── */
+  .bottom-nav {
+    display: flex;
+    border-top: 1px solid rgba(201,123,138,0.2);
+    background: var(--card-bg);
+  }
+
+  .nav-btn {
+    flex: 1;
+    padding: 12px 0;
+    text-align: center;
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: var(--text-muted);
+    font-size: 12px;
+    font-family: inherit;
+    transition: color 0.2s;
+  }
+
+  .nav-btn.active {
+    color: var(--rose);
+  }
+
+  .nav-btn .nav-icon {
+    font-size: 20px;
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  /* ── ABOUT SCREEN ── */
+  #about {
+    display: none;
+    flex-direction: column;
+    height: 100vh;
+    overflow-y: auto;
+    padding: 20px;
+    animation: slideIn 0.35s ease;
+  }
+
+  .about-hero {
+    text-align: center;
+    padding: 20px 0;
+    border-bottom: 1px solid rgba(201,123,138,0.2);
+    margin-bottom: 20px;
+  }
+
+  .about-hero h2 {
+    font-size: 24px;
+    color: var(--rose);
+  }
+
+  .about-hero .tagline {
+    font-size: 14px;
+    color: var(--gold);
+    margin-top: 4px;
+  }
+
+  .about-section {
+    margin-bottom: 20px;
+  }
+
+  .about-section h3 {
+    font-size: 16px;
+    color: var(--rose);
+    margin-bottom: 8px;
+  }
+
+  .about-section p {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text-muted);
+  }
+
+  .heritage-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin-top: 12px;
+  }
+
+  .stat-box {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 14px 10px;
+    text-align: center;
+  }
+
+  .stat-box .number {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--gold);
+  }
+
+  .stat-box .label {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ HOME SCREEN ═══ -->
+<div id="home">
+  <div class="brand-header">
+    <h1>TFTea</h1>
+    <div class="subtitle">TRÉSOR DE FLEUR</div>
+    <div class="cn-name">保加利亚玫瑰 · 花园茶饮</div>
+  </div>
+
+  <div class="blend-grid">
+    <!-- Green Rose -->
+    <div class="blend-card green" onclick="showBlend(0)">
+      <div class="blend-icon">🌿</div>
+      <div class="blend-name">Green Rose</div>
+      <div class="blend-name-cn">永春花园</div>
+      <span class="blend-tag standard">经典 Classic</span>
+      <div class="blend-profile">Fresh, grassy, floral finish · 新鲜、花香</div>
+    </div>
+
+    <!-- White Rose -->
+    <div class="blend-card white" onclick="showBlend(1)">
+      <div class="blend-icon">🤍</div>
+      <div class="blend-name">White Rose</div>
+      <div class="blend-name-cn">银瓣轻语</div>
+      <span class="blend-tag standard">经典 Classic</span>
+      <div class="blend-profile">Delicate, honey-floral, silky · 细腻、蜜香</div>
+    </div>
+
+    <!-- Black Rose -->
+    <div class="blend-card black" onclick="showBlend(2)">
+      <div class="blend-icon">🖤</div>
+      <div class="blend-name">Black Rose</div>
+      <div class="blend-name-cn">绯红丝绒</div>
+      <span class="blend-tag standard">经典 Classic</span>
+      <div class="blend-profile">Rich, malty, sweet rose aroma · 醇厚、玫瑰甜香</div>
+    </div>
+
+    <!-- Imperial Garden -->
+    <div class="blend-card imperial" onclick="showBlend(3)">
+      <div class="blend-icon">👑</div>
+      <div class="blend-name">Imperial Garden</div>
+      <div class="blend-name-cn">皇家花园</div>
+      <span class="blend-tag premium">尊享 Premium</span>
+      <div class="blend-profile">Multi-layered, floral bouquet, Provence finish · 多层花香</div>
+    </div>
+
+    <!-- Bulgarian Trinity -->
+    <div class="blend-card trinity" onclick="showBlend(4)">
+      <div class="blend-icon">🌸</div>
+      <div class="blend-name">Bulgarian Trinity</div>
+      <div class="blend-name-cn">保加利亚三宝</div>
+      <span class="blend-tag signature">招牌 Signature</span>
+      <div class="blend-profile">Caffeine-free, calming herbal · 无咖啡因、安神花草</div>
+    </div>
+
+    <!-- Essential Oils teaser -->
+    <div class="blend-card" style="border-color: rgba(212,175,55,0.3);" onclick="showOils()">
+      <div class="blend-icon">💧</div>
+      <div class="blend-name">Rose Oil</div>
+      <div class="blend-name-cn">玫瑰精油</div>
+      <span class="blend-tag premium">精油 Essential Oil</span>
+      <div class="blend-profile">Liquid Gold from the Valley of Roses · 液体黄金</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ DETAIL SCREEN ═══ -->
+<div id="detail">
+  <div class="detail-header">
+    <button class="back-btn" onclick="goHome()">←</button>
+    <div class="detail-title">
+      <h2 id="det-name"></h2>
+      <div class="cn" id="det-name-cn"></div>
+    </div>
+  </div>
+  <div class="detail-body">
+    <div class="section">
+      <div class="section-title">Recipe 配方</div>
+      <div class="recipe-bar" id="det-recipe-bar"></div>
+      <div class="ingredient-list" id="det-ingredients"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Brewing Guide 冲泡指南</div>
+      <div class="brew-guide">
+        <div class="brew-icon">🫖</div>
+        <div class="brew-details">
+          <div class="temp" id="det-temp"></div>
+          <div class="time" id="det-time"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Tasting Profile 风味</div>
+      <div class="profile-text" id="det-profile"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Origin 产地</div>
+      <div class="origin-badges" id="det-origins"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ ABOUT SCREEN ═══ -->
+<div id="about">
+  <div class="about-hero">
+    <h2>TFTea · 保加利亚玫瑰花园</h2>
+    <div class="tagline">Trésor de Fleur — Treasures from the Valley of Roses</div>
+  </div>
+
+  <div class="about-section">
+    <h3>🌹 Our Heritage · 品牌传承</h3>
+    <p>TFTea is born from the heart of Bulgaria's Rose Valley — the same valley that has produced the world's finest Damask roses for over 400 years. Our 400-acre bio plantation in Bunovo village has been growing roses since 1908.</p>
+    <p style="margin-top:8px;">TFTea诞生于保加利亚玫瑰谷的中心——这片山谷400年来一直出产世界上最优质的大马士革玫瑰。我们在Bunovo村的400英亩有机种植园自1908年开始种植玫瑰。</p>
+  </div>
+
+  <div class="heritage-stats">
+    <div class="stat-box">
+      <div class="number">1908</div>
+      <div class="label">Est. 成立</div>
+    </div>
+    <div class="stat-box">
+      <div class="number">160ha</div>
+      <div class="label">Organic 有机</div>
+    </div>
+    <div class="stat-box">
+      <div class="number">400+</div>
+      <div class="label">Years heritage 年传承</div>
+    </div>
+  </div>
+
+  <div class="about-section">
+    <h3>🌿 Our Promise · 我们的承诺</h3>
+    <p>Every TFTea blend combines premium Chinese teas with authentic Bulgarian botanicals — hand-picked Damask rose buds, wild chamomile from the Balkan foothills, and lavender from our own fields. No artificial flavors. No shortcuts.</p>
+  </div>
+
+  <div class="about-section">
+    <h3>🤝 B2B Partnerships · 合作伙伴</h3>
+    <p>Interested in wholesale, custom blends, or white-label products? We supply rose buds, essential oils, and botanical ingredients to tea houses, spas, and wellness brands worldwide.</p>
+    <p style="margin-top:8px;">提供批发、定制拼配、白标产品。供应花蕾、精油、花草原料给茶馆、水疗中心及健康品牌。</p>
+  </div>
+
+  <button class="back-btn" onclick="goHome()" style="margin: 0 auto 20px;">← Back</button>
+</div>
+
+<!-- ═══ OILS PLACEHOLDER ═══ -->
+<div id="oils" style="display:none; flex-direction:column; height:100vh; padding:20px; animation:slideIn 0.35s ease;">
+  <div class="detail-header">
+    <button class="back-btn" onclick="goHome()">←</button>
+    <div class="detail-title">
+      <h2>Rose Oil · 玫瑰精油</h2>
+      <div class="cn">Liquid Gold · 液体黄金</div>
+    </div>
+  </div>
+  <div class="detail-body">
+    <div class="section">
+      <div class="section-title">Coming Soon · 详情即将推出</div>
+      <div class="profile-text">Pure Bulgarian Damask rose essential oil — details to follow.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ BOTTOM NAV ═══ -->
+<div class="bottom-nav" id="bottom-nav">
+  <button class="nav-btn active" onclick="showScreen('home')">
+    <span class="nav-icon">🍵</span>
+    Products 产品
+  </button>
+  <button class="nav-btn" onclick="showScreen('about')">
+    <span class="nav-icon">🌹</span>
+    Our Story 故事
+  </button>
+</div>
+
+<script>
+const blends = [
+  {
+    name: "Green Rose",
+    nameCN: "永春花园 · Garden of Eternal Spring",
+    tag: "经典 Classic",
+    tagClass: "standard",
+    ingredients: [
+      { name: "Green Tea 绿茶", pct: 85, color: "#7BA98F" },
+      { name: "Rose Buds 玫瑰花蕾", pct: 15, color: "#C97B8A" }
+    ],
+    origins: ["🇧🇬 Bulgaria 玫瑰谷", "🇨🇳 China 中国绿茶"],
+    temp: "80°C",
+    time: "3 minutes · 3分钟",
+    profile: "Fresh and grassy opening with a delicate floral finish. The Chinese green tea provides a clean, vegetal base while Bulgarian Damask rose buds add a sweet, romantic floral note that lingers on the palate.\n\n清新草绿的前调，细腻的花香余韵。中国绿茶提供干净的植物基底，保加利亚大马士革玫瑰花蕾增添浪漫花香。"
+  },
+  {
+    name: "White Rose",
+    nameCN: "银瓣轻语 · Silver Petals Whisper",
+    tag: "经典 Classic",
+    tagClass: "standard",
+    ingredients: [
+      { name: "Silver Needle 白毫银针", pct: 85, color: "#E8DDD0" },
+      { name: "Rose Buds 玫瑰花蕾", pct: 15, color: "#C97B8A" }
+    ],
+    origins: ["🇧🇬 Bulgaria 玫瑰谷", "🇨🇳 Fujian Silver Needle 福建银针"],
+    temp: "75°C",
+    time: "4 minutes · 4分钟",
+    profile: "Delicate and ethereal — honey notes from the Silver Needle dance with the soft rose perfume. A silky, lingering finish that feels like sipping a rose garden at dawn.\n\n空灵细腻——银针的蜜香与柔和的玫瑰芳香交织。丝滑绵长的余韵，如同在黎明时分品饮一座玫瑰花园。"
+  },
+  {
+    name: "Black Rose",
+    nameCN: "绯红丝绒 · Crimson Velvet",
+    tag: "经典 Classic",
+    tagClass: "standard",
+    ingredients: [
+      { name: "Kung Fu Black Tea 功夫红茶", pct: 85, color: "#8B4513" },
+      { name: "Rose Buds 玫瑰花蕾", pct: 15, color: "#C97B8A" }
+    ],
+    origins: ["🇧🇬 Bulgaria 玫瑰谷", "🇨🇳 China 中国红茶"],
+    temp: "90°C",
+    time: "3-4 minutes · 3-4分钟",
+    profile: "Rich and malty with a sweet rose aroma that wraps around the tongue like velvet. The robust black tea body carries the rose fragrance beautifully — bold yet refined.\n\n醇厚麦芽香与甜美玫瑰芳香如天鹅绒般包裹舌尖。浓烈的红茶茶体完美承载玫瑰芬芳——大胆而精致。"
+  },
+  {
+    name: "Imperial Garden",
+    nameCN: "皇家花园 · Imperial Garden",
+    tag: "尊享 Premium",
+    tagClass: "premium",
+    ingredients: [
+      { name: "Silver Needle 白毫银针", pct: 70, color: "#E8DDD0" },
+      { name: "Rose Buds 玫瑰花蕾", pct: 20, color: "#C97B8A" },
+      { name: "Lavender 薰衣草", pct: 10, color: "#9B8EC4" }
+    ],
+    origins: ["🇧🇬 Rose Valley 玫瑰谷", "🇧🇬 Provence-style Lavender 薰衣草", "🇨🇳 Fujian Silver Needle 福建银针"],
+    temp: "75°C",
+    time: "4 minutes · 4分钟",
+    profile: "Multi-layered luxury — the delicate white tea opens into a full floral bouquet of Damask rose, finishing with a whisper of Provençal lavender. Our most sophisticated blend, worthy of its royal name.\n\n多层奢华——细腻的白茶展开为大马士革玫瑰的完整花束，最后以薰衣草的低语收尾。我们最精致的拼配，名副其实的皇家品质。"
+  },
+  {
+    name: "Bulgarian Trinity",
+    nameCN: "保加利亚三宝 · Bulgarian Trinity",
+    tag: "招牌 Signature",
+    tagClass: "signature",
+    ingredients: [
+      { name: "Rose Buds 玫瑰花蕾", pct: 50, color: "#C97B8A" },
+      { name: "Wild Chamomile 野甘菊", pct: 30, color: "#E8C84A" },
+      { name: "Lavender 薰衣草", pct: 20, color: "#9B8EC4" }
+    ],
+    origins: ["🇧🇬 100% Bulgarian 保加利亚", "🚫 Caffeine-free 无咖啡因", "🌙 Evening tea 晚安茶"],
+    temp: "95°C",
+    time: "5-7 minutes · 5-7分钟 (herbal infusion)",
+    profile: "A pure Bulgarian wellness experience — no tea leaves, no caffeine. Three treasures from our land: rose buds for beauty, wild chamomile for calm, lavender for peace. The perfect evening ritual.\n\n纯正保加利亚养生体验——无茶叶、无咖啡因。来自我们土地的三宝：玫瑰花蕾养颜、野甘菊安神、薰衣草宁心。完美的晚间仪式。"
+  }
+];
+
+function showBlend(idx) {
+  const b = blends[idx];
+  document.getElementById('det-name').textContent = b.name;
+  document.getElementById('det-name-cn').textContent = b.nameCN;
+  
+  // Recipe bar
+  const bar = document.getElementById('det-recipe-bar');
+  bar.innerHTML = b.ingredients.map(i => 
+    `<div style="width:${i.pct}%; background:${i.color};">${i.pct}%</div>`
+  ).join('');
+  
+  // Ingredients
+  const ing = document.getElementById('det-ingredients');
+  ing.innerHTML = b.ingredients.map(i =>
+    `<div class="ingredient-chip"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${i.color};"></span> ${i.name} (${i.pct}%)</div>`
+  ).join('');
+  
+  // Brewing
+  document.getElementById('det-temp').textContent = b.temp;
+  document.getElementById('det-time').textContent = b.time;
+  
+  // Profile
+  document.getElementById('det-profile').textContent = b.profile;
+  
+  // Origins
+  const orig = document.getElementById('det-origins');
+  orig.innerHTML = b.origins.map(o => `<div class="origin-badge">${o}</div>`).join('');
+  
+  showScreen('detail');
+}
+
+function showOils() {
+  showScreen('oils');
+}
+
+function goHome() {
+  showScreen('home');
+}
+
+function showScreen(id) {
+  ['home','detail','about','oils'].forEach(s => {
+    document.getElementById(s).style.display = 'none';
+  });
+  document.getElementById(id).style.display = (id === 'home') ? 'flex' : 'flex';
+  
+  // Nav active state
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  if (id === 'home' || id === 'detail' || id === 'oils') {
+    document.querySelectorAll('.nav-btn')[0].classList.add('active');
+  } else {
+    document.querySelectorAll('.nav-btn')[1].classList.add('active');
+  }
+}
+
+// Prevent zoom on double-tap
+document.addEventListener('touchend', e => {
+  const now = Date.now();
+  if (now - (window.lastTap || 0) < 300) e.preventDefault();
+  window.lastTap = now;
+}, { passive: false });
+</script>
+</body>
+</html>
