@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trésor de Fleur / TFTea — Hangzhou Display</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Playfair+Display:wght@500;700;900&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg:#070606; --panel:#14100f; --rose:#D48696; --rose2:#B84C62; --gold:#D8B45A;
+    --cream:#F7EFE6; --muted:#B9AAA1; --green:#88A77B; --white:#E7D7C2;
+    --blacktea:#8D4B2D; --lavender:#9A87C9; --chamomile:#E7C75E; --puer:#6D3D2F;
+  }
+  body { background: radial-gradient(circle at 25% 20%, #241213 0, #080606 45%, #030303 100%); color:var(--cream); font-family:'Noto Serif SC','Playfair Display',serif; overflow:hidden; height:100vh; width:100vw; cursor:none; }
+  .slide { position:absolute; inset:0; width:100%; height:100%; display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity 1.2s ease; padding:58px 78px; }
+  .slide.active { opacity:1; z-index:2; }
+  .watermark { position:fixed; right:24px; bottom:14px; z-index:9; color:rgba(255,255,255,.18); font-size:13px; letter-spacing:2px; }
+  .progress-bar { position:fixed; left:0; bottom:0; height:4px; background:linear-gradient(90deg,var(--rose),var(--gold)); z-index:10; }
+  .kicker { color:var(--gold); font-size:18px; letter-spacing:5px; text-transform:uppercase; margin-bottom:18px; }
+  h1 { font-size:78px; line-height:1.03; color:var(--rose); font-weight:900; letter-spacing:3px; }
+  h2 { font-size:52px; line-height:1.1; color:var(--cream); font-weight:800; }
+  .cn-big { font-size:34px; color:var(--gold); margin-top:16px; }
+  .sub { color:var(--muted); font-size:23px; line-height:1.55; margin-top:24px; max-width:980px; }
+  .pill { display:inline-block; padding:8px 20px; border-radius:999px; background:rgba(216,180,90,.14); border:1px solid rgba(216,180,90,.45); color:var(--gold); font-size:17px; margin:7px; }
+  .hero { flex-direction:column; text-align:center; }
+  .hero .logo { font-size:86px; color:var(--rose); font-weight:900; letter-spacing:8px; }
+  .hero .brand { font-size:31px; color:var(--gold); letter-spacing:8px; margin-top:8px; }
+  .hero .line { font-size:35px; margin-top:18px; color:var(--cream); }
+  .split { display:grid; grid-template-columns:1fr 1fr; gap:62px; align-items:center; width:100%; }
+  .card { background:rgba(255,255,255,.045); border:1px solid rgba(255,255,255,.10); border-radius:26px; padding:34px 38px; box-shadow:0 20px 60px rgba(0,0,0,.25); }
+  .quality-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:28px; }
+  .quality-item { background:rgba(255,255,255,.045); border-radius:20px; padding:24px; border:1px solid rgba(255,255,255,.08); }
+  .quality-item .icon { font-size:38px; margin-bottom:10px; }
+  .quality-item .title { font-size:24px; color:var(--cream); font-weight:700; }
+  .quality-item .cn { color:var(--muted); font-size:16px; margin-top:6px; }
+  .product { display:grid; grid-template-columns:.9fr 1.1fr; gap:54px; width:100%; align-items:center; }
+  .product-icon { font-size:72px; margin-bottom:18px; }
+  .tier { display:inline-block; border-radius:999px; padding:7px 17px; font-size:15px; font-weight:800; letter-spacing:2px; margin-bottom:14px; color:#120c0b; }
+  .classic { background:var(--muted); } .premium { background:var(--gold); } .signature { background:var(--rose); } .botanical { background:#D7C29A; }
+  .product-name { font-size:55px; font-weight:900; line-height:1.05; color:var(--cream); }
+  .product-cn { font-size:33px; color:var(--gold); margin-top:12px; }
+  .profile { color:var(--muted); font-size:22px; line-height:1.55; margin-top:22px; }
+  .recipe-title { color:var(--muted); text-transform:uppercase; letter-spacing:3px; font-size:14px; margin-bottom:16px; }
+  .bar { display:flex; overflow:hidden; height:55px; border-radius:14px; background:#222; }
+  .seg { display:flex; align-items:center; justify-content:center; font-weight:800; font-size:17px; color:#15100d; }
+  .legend { display:flex; flex-wrap:wrap; gap:14px 22px; margin-top:18px; color:var(--muted); font-size:18px; }
+  .dot { display:inline-block; width:14px; height:14px; border-radius:50%; margin-right:7px; vertical-align:-1px; }
+  .brew { margin-top:24px; background:rgba(212,134,150,.10); border-radius:20px; padding:24px 28px; display:flex; align-items:center; gap:20px; }
+  .brew .big { font-size:32px; color:var(--rose); font-weight:900; }
+  .brew .small { font-size:18px; color:var(--muted); margin-top:4px; }
+  .menu-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:28px; width:100%; }
+  .menu-item { background:rgba(255,255,255,.045); border:1px solid rgba(255,255,255,.09); border-radius:20px; padding:22px; min-height:150px; }
+  .menu-item .no { color:var(--gold); font-size:15px; letter-spacing:2px; }
+  .menu-item .name { font-size:25px; color:var(--cream); font-weight:800; margin-top:6px; }
+  .menu-item .cn { font-size:20px; color:var(--rose); margin-top:2px; }
+  .menu-item .desc { font-size:15px; color:var(--muted); margin-top:10px; line-height:1.45; }
+  .stats { display:flex; gap:26px; margin-top:32px; justify-content:center; }
+  .stat { min-width:190px; background:rgba(255,255,255,.05); border-radius:22px; padding:25px 30px; text-align:center; border:1px solid rgba(255,255,255,.08); }
+  .stat .num { font-size:43px; color:var(--gold); font-weight:900; }
+  .stat .label { font-size:17px; color:var(--muted); margin-top:5px; }
+  .cta { flex-direction:column; text-align:center; }
+  .cta h2 { font-size:60px; }
+  .cta .highlight { color:var(--rose); }
+  .cta .small { color:var(--muted); font-size:22px; margin-top:22px; }
+</style>
+</head>
+<body>
+<div class="watermark">Trésor de Fleur · TFTea · 保加利亚玫瑰花园</div>
+<div class="progress-bar" id="progress"></div>
+
+<div class="slide hero active" data-duration="8">
+  <div class="logo">TFTea</div>
+  <div class="brand">TRÉSOR DE FLEUR</div>
+  <div class="line">保加利亚玫瑰 · 天然花草 · 中国茶文化</div>
+  <div class="sub">Pure Bulgarian botanicals meet fine Chinese tea — real flowers, real herbs, no artificial perfume aroma.</div>
+  <div style="margin-top:26px"><span class="pill">50g 茶包</span><span class="pill">10g 品鉴装</span><span class="pill">批发 / 私人定制</span></div>
+</div>
+
+<div class="slide split" data-duration="9">
+  <div>
+    <div class="kicker">Pure · Certified · Natural</div>
+    <h2>Only real botanicals.<br>No artificial flavor.</h2>
+    <div class="cn-big">纯天然认证花草 · 无人工香精</div>
+    <p class="sub">Our aroma comes from bio-certified Bulgarian Damask rose, bio-certified lavender, wild chamomile and real tea leaves.</p>
+  </div>
+  <div class="quality-grid">
+    <div class="quality-item"><div class="icon">🌹</div><div class="title">Own Rose Plantation</div><div class="cn">自有玫瑰种植园</div></div>
+    <div class="quality-item"><div class="icon">🤲</div><div class="title">Hand-Picked</div><div class="cn">人工采摘 · 精心挑选</div></div>
+    <div class="quality-item"><div class="icon">🌿</div><div class="title">Traditional Drying</div><div class="cn">传统方式干燥与储存</div></div>
+    <div class="quality-item"><div class="icon">⭐</div><div class="title">Premium EU Clients</div><div class="cn">欧洲五星酒店与米其林餐厅客户</div></div>
+  </div>
+</div>
+
+<div class="slide product" data-duration="10">
+  <div>
+    <div class="product-icon">🌹</div><span class="tier signature">HERO INGREDIENT 核心原料</span>
+    <div class="product-name">Bulgarian Damask Rose</div>
+    <div class="product-cn">保加利亚大马士革玫瑰</div>
+    <div class="profile">Bio-certified rose buds from our rose plantation. Carefully hand-picked and naturally dried to preserve aroma, color and purity.</div>
+  </div>
+  <div class="card">
+    <div class="recipe-title">Why it matters 为什么珍贵</div>
+    <div class="profile" style="margin-top:0">Rose is our signature story: elegant floral aroma, beauty tradition, emotional balance, premium gifting and luxury hospitality culture.</div>
+    <div class="brew"><div style="font-size:42px">✨</div><div><div class="big">Real rose aroma</div><div class="small">Not perfume · Not synthetic · 真花香，不是香精</div></div></div>
+  </div>
+</div>
+
+<div class="slide product" data-duration="10">
+  <div>
+    <div class="product-icon">🌿</div><span class="tier classic">CLASSIC 经典</span>
+    <div class="product-name">Green Rose</div><div class="product-cn">永春花园 · Garden of Eternal Spring</div>
+    <div class="profile">Green tea blended with Bulgarian Damask rose buds. Fresh, light, clean and floral — an easy first cup for visitors.</div>
+  </div>
+  <div class="card"><div class="recipe-title">Recipe 配方</div><div class="bar"><div class="seg" style="width:85%;background:var(--green)">85%</div><div class="seg" style="width:15%;background:var(--rose)">15%</div></div><div class="legend"><span><i class="dot" style="background:var(--green)"></i>Green Tea 绿茶</span><span><i class="dot" style="background:var(--rose)"></i>Damask Rose 玫瑰</span></div><div class="brew"><div style="font-size:42px">🫖</div><div><div class="big">80°C · 3 min</div><div class="small">Fresh floral finish · 清新花香</div></div></div></div>
+</div>
+
+<div class="slide product" data-duration="10">
+  <div>
+    <div class="product-icon">🤍</div><span class="tier premium">ELEGANT 优雅</span>
+    <div class="product-name">White Rose</div><div class="product-cn">银瓣轻语 · Silver Petals Whisper</div>
+    <div class="profile">Bai Mu Dan / White Peony tea blended with Bulgarian Damask rose. Soft, delicate, premium and naturally floral.</div>
+  </div>
+  <div class="card"><div class="recipe-title">Recipe 配方</div><div class="bar"><div class="seg" style="width:85%;background:var(--white)">85%</div><div class="seg" style="width:15%;background:var(--rose)">15%</div></div><div class="legend"><span><i class="dot" style="background:var(--white)"></i>Bai Mu Dan 白牡丹</span><span><i class="dot" style="background:var(--rose)"></i>Damask Rose 玫瑰</span></div><div class="brew"><div style="font-size:42px">🫖</div><div><div class="big">80–85°C · 4 min</div><div class="small">Soft honey-floral profile · 柔和花蜜香</div></div></div></div>
+</div>
+
+<div class="slide product" data-duration="10">
+  <div>
+    <div class="product-icon">🖤</div><span class="tier classic">RICH 醇厚</span>
+    <div class="product-name">Black Rose</div><div class="product-cn">绯红丝绒 · Crimson Velvet</div>
+    <div class="profile">Chinese black tea blended with Bulgarian Damask rose. Warm, malty and romantic — a stronger tea with elegant rose aroma.</div>
+  </div>
+  <div class="card"><div class="recipe-title">Recipe 配方</div><div class="bar"><div class="seg" style="width:85%;background:var(--blacktea);color:white">85%</div><div class="seg" style="width:15%;background:var(--rose)">15%</div></div><div class="legend"><span><i class="dot" style="background:var(--blacktea)"></i>Chinese Black Tea 中国红茶</span><span><i class="dot" style="background:var(--rose)"></i>Damask Rose 玫瑰</span></div><div class="brew"><div style="font-size:42px">🫖</div><div><div class="big">90–95°C · 3–4 min</div><div class="small">Rich rose warmth · 醇厚玫瑰香</div></div></div></div>
+</div>
+
+<div class="slide product" data-duration="10">
+  <div>
+    <div class="product-icon">👑</div><span class="tier premium">PREMIUM 尊享</span>
+    <div class="product-name">Imperial Garden</div><div class="product-cn">皇家花园 · Imperial Garden</div>
+    <div class="profile">Bai Mu Dan white tea, Bulgarian rose and lavender. Our premium floral gift blend — layered, aromatic and calming.</div>
+  </div>
+  <div class="card"><div class="recipe-title">Recipe 配方</div><div class="bar"><div class="seg" style="width:70%;background:var(--white)">70%</div><div class="seg" style="width:20%;background:var(--rose)">20%</div><div class="seg" style="width:10%;background:var(--lavender);color:white">10%</div></div><div class="legend"><span><i class="dot" style="background:var(--white)"></i>Bai Mu Dan 白牡丹</span><span><i class="dot" style="background:var(--rose)"></i>Rose 玫瑰</span><span><i class="dot" style="background:var(--lavender)"></i>Lavender 薰衣草</span></div><div class="brew"><div style="font-size:42px">🫖</div><div><div class="big">80–85°C · 4 min</div><div class="small">Premium floral layers · 多层花香</div></div></div></div>
+</div>
+
+<div class="slide product" data-duration="10">
+  <div>
+    <div class="product-icon">🌸</div><span class="tier signature">SIGNATURE 招牌</span>
+    <div class="product-name">Bulgarian Trinity</div><div class="product-cn">保加利亚三宝 · Bulgarian Trinity</div>
+    <div class="profile">100% Bulgarian caffeine-free herbal blend: Damask rose, wild chamomile and lavender. A calm evening ritual.</div>
+  </div>
+  <div class="card"><div class="recipe-title">Recipe 配方</div><div class="bar"><div class="seg" style="width:50%;background:var(--rose)">50%</div><div class="seg" style="width:30%;background:var(--chamomile)">30%</div><div class="seg" style="width:20%;background:var(--lavender);color:white">20%</div></div><div class="legend"><span><i class="dot" style="background:var(--rose)"></i>Rose 玫瑰</span><span><i class="dot" style="background:var(--chamomile)"></i>Wild Chamomile 洋甘菊</span><span><i class="dot" style="background:var(--lavender)"></i>Lavender 薰衣草</span></div><div class="brew"><div style="font-size:42px">🌙</div><div><div class="big">95°C · 5–7 min</div><div class="small">Caffeine-free · 无咖啡因</div></div></div></div>
+</div>
+
+<div class="slide product" data-duration="10">
+  <div>
+    <div class="product-icon">🍂</div><span class="tier classic">CHINESE TEA 中国茶</span>
+    <div class="product-name">Pu-erh Rose</div><div class="product-cn">玫瑰熟韵 · Pu-erh Rose</div>
+    <div class="profile">Ripe Pu-erh blended with Bulgarian Damask rose. Deep, smooth and earthy, with a natural rose finish.</div>
+  </div>
+  <div class="card"><div class="recipe-title">Recipe 配方</div><div class="bar"><div class="seg" style="width:85%;background:var(--puer);color:white">85%</div><div class="seg" style="width:15%;background:var(--rose)">15%</div></div><div class="legend"><span><i class="dot" style="background:var(--puer)"></i>Ripe Pu-erh 熟普洱</span><span><i class="dot" style="background:var(--rose)"></i>Damask Rose 玫瑰</span></div><div class="brew"><div style="font-size:42px">🫖</div><div><div class="big">95°C · 4–5 min</div><div class="small">Deep & smooth · 醇厚顺滑</div></div></div></div>
+</div>
+
+<div class="slide" data-duration="11" style="flex-direction:column; text-align:center;">
+  <div class="kicker">Product Collection 产品系列</div>
+  <h2>Tea Blends & Pure Botanicals</h2>
+  <div class="menu-grid">
+    <div class="menu-item"><div class="no">01</div><div class="name">Green Rose</div><div class="cn">永春花园</div><div class="desc">Green tea + Bulgarian rose</div></div>
+    <div class="menu-item"><div class="no">02</div><div class="name">White Rose</div><div class="cn">银瓣轻语</div><div class="desc">Bai Mu Dan + Bulgarian rose</div></div>
+    <div class="menu-item"><div class="no">03</div><div class="name">Black Rose</div><div class="cn">绯红丝绒</div><div class="desc">Chinese black tea + Bulgarian rose</div></div>
+    <div class="menu-item"><div class="no">04</div><div class="name">Imperial Garden</div><div class="cn">皇家花园</div><div class="desc">Bai Mu Dan + rose + lavender</div></div>
+    <div class="menu-item"><div class="no">05</div><div class="name">Bulgarian Trinity</div><div class="cn">保加利亚三宝</div><div class="desc">Rose + wild chamomile + lavender</div></div>
+    <div class="menu-item"><div class="no">06</div><div class="name">Pu-erh Rose</div><div class="cn">玫瑰熟韵</div><div class="desc">Ripe Pu-erh + Bulgarian rose</div></div>
+    <div class="menu-item"><div class="no">07</div><div class="name">Rose Buds</div><div class="cn">大马士革玫瑰花苞</div><div class="desc">Pure bio-certified Bulgarian rose</div></div>
+    <div class="menu-item"><div class="no">08</div><div class="name">Wild Chamomile</div><div class="cn">野生洋甘菊</div><div class="desc">Pure wild Bulgarian chamomile</div></div>
+    <div class="menu-item"><div class="no">09</div><div class="name">Lavender</div><div class="cn">保加利亚薰衣草</div><div class="desc">Pure bio-certified Bulgarian lavender</div></div>
+  </div>
+</div>
+
+<div class="slide split" data-duration="9">
+  <div>
+    <div class="kicker">For Retail & B2B</div>
+    <h2>Finished packs, samples, bulk botanicals and private label.</h2>
+    <div class="cn-big">零售包装 · 品鉴装 · 批发原料 · 私人定制</div>
+    <p class="sub">Suitable for tea shops, luxury hotels, restaurants, spas, gift sets, wellness brands and distributors.</p>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="num">50g</div><div class="label">Retail Packs<br>零售装</div></div>
+    <div class="stat"><div class="num">10g</div><div class="label">Discovery Samples<br>品鉴装</div></div>
+  </div>
+</div>
+
+<div class="slide cta" data-duration="7">
+  <div style="font-size:84px;margin-bottom:20px">🌹</div>
+  <h2>Taste the <span class="highlight">Rose Valley</span><br>品尝<span class="highlight">玫瑰谷</span>的味道</h2>
+  <div class="cn-big">欢迎品鉴 · 欢迎商务合作</div>
+  <div class="small">Ask for expo special offers · 可咨询展会特惠与批发合作</div>
+</div>
+
+<script>
+const slides = [...document.querySelectorAll('.slide')];
+let current = 0;
+let timer = null;
+function showSlide(i){
+  clearTimeout(timer);
+  slides.forEach((s, idx)=>s.classList.toggle('active', idx===i));
+  const duration = Number(slides[i].dataset.duration || 8) * 1000;
+  const progress = document.getElementById('progress');
+  progress.style.transition='none'; progress.style.width='0%';
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{ progress.style.transition=`width ${duration}ms linear`; progress.style.width='100%'; }));
+  timer=setTimeout(()=>{ current=(i+1)%slides.length; showSlide(current); }, duration);
+}
+document.addEventListener('click',()=>{ current=(current+1)%slides.length; showSlide(current); });
+document.addEventListener('keydown',(e)=>{ if(e.key==='ArrowRight'||e.key===' '){ current=(current+1)%slides.length; showSlide(current); } if(e.key==='ArrowLeft'){ current=(current-1+slides.length)%slides.length; showSlide(current); }});
+showSlide(0);
+</script>
+</body>
+</html>
