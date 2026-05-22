@@ -63,6 +63,13 @@
   .cta h2 { font-size:60px; }
   .cta .highlight { color:var(--rose); }
   .cta .small { color:var(--muted); font-size:22px; margin-top:22px; }
+  .photo-slide { padding:0; align-items:stretch; justify-content:stretch; background:#050303; }
+  .photo-bg { position:absolute; inset:0; background-image:var(--photo); background-size:cover; background-position:var(--pos,50% 50%); transform:scale(1.035); filter:saturate(1.08) contrast(1.03) brightness(.72); }
+  .photo-slide::after { content:""; position:absolute; inset:0; background:linear-gradient(90deg,rgba(5,3,3,.82) 0%,rgba(5,3,3,.48) 42%,rgba(5,3,3,.18) 100%), radial-gradient(circle at 18% 45%, rgba(212,134,150,.28), transparent 34%); }
+  .photo-copy { position:relative; z-index:1; max-width:780px; align-self:center; margin-left:86px; }
+  .photo-copy h2 { font-size:66px; color:var(--cream); text-shadow:0 8px 36px rgba(0,0,0,.55); }
+  .photo-copy .cn-big { color:var(--rose); text-shadow:0 6px 26px rgba(0,0,0,.55); }
+  .photo-copy .sub { color:#eadfd3; text-shadow:0 4px 18px rgba(0,0,0,.6); }
 </style>
 </head>
 <body>
@@ -77,7 +84,65 @@
   <div style="margin-top:26px"><span class="pill">50g 茶包</span><span class="pill">10g 品鉴装</span><span class="pill">批发 / 私人定制</span></div>
 </div>
 
-<div class="slide split" data-duration="9">
+<div class="slide photo-slide" data-duration="8" style="--photo:url('assets/rose-valley/rose-valley-07.jpg'); --pos:50% 48%;">
+  <div class="photo-bg"></div>
+  <div class="photo-copy">
+    <div class="kicker">From the Rose Valley</div>
+    <h2>Real Bulgarian roses,<br>grown under open sky.</h2>
+    <div class="cn-big">来自保加利亚玫瑰谷的真实花香</div>
+    <p class="sub">Authentic Damask roses from Bulgaria — the heart of our floral tea story.</p>
+  </div>
+</div>
+
+<div class="slide photo-slide" data-duration="8" style="--photo:url('assets/rose-valley/rose-valley-03.jpg'); --pos:50% 42%;">
+  <div class="photo-bg"></div>
+  <div class="photo-copy">
+    <div class="kicker">Aroma You Can Trust</div>
+    <h2>Not perfume.<br>Not synthetic.</h2>
+    <div class="cn-big">不是香精 · 是真正的玫瑰</div>
+    <p class="sub">Our blends are built around natural rose aroma, carefully preserved from flower to cup.</p>
+  </div>
+</div>
+
+<div class="slide photo-slide" data-duration="8" style="--photo:url('assets/rose-valley/rose-valley-02.jpg'); --pos:50% 44%;">
+  <div class="photo-bg"></div>
+  <div class="photo-copy">
+    <div class="kicker">Origin Story</div>
+    <h2>Hand-picked in<br>Bulgaria’s Rose Valley.</h2>
+    <div class="cn-big">人工采摘 · 精心挑选</div>
+    <p class="sub">A premium origin story for tea shops, hotels, spas, gifts and wellness brands.</p>
+  </div>
+</div>
+
+<div class="slide photo-slide" data-duration="8" style="--photo:url('assets/rose-valley/rose-valley-06.jpg'); --pos:50% 50%;">
+  <div class="photo-bg"></div>
+  <div class="photo-copy">
+    <div class="kicker">Luxury Botanical Tea</div>
+    <h2>Taste the<br>Rose Valley.</h2>
+    <div class="cn-big">品尝玫瑰谷的味道</div>
+    <p class="sub">Pure botanicals, elegant tea blends and private label possibilities for China partners.</p>
+  </div>
+</div>
+
+<div class="slide photo-slide" data-duration="8" style="--photo:url('assets/rose-valley/rose-valley-11.jpg'); --pos:50% 45%;">
+  <div class="photo-bg"></div>
+  <div class="photo-copy">
+    <div class="kicker">Rose Valley Harvest</div>
+    <h2>Picked at the source,<br>shared with the world.</h2>
+    <div class="cn-big">源自玫瑰谷 · 面向世界分享</div>
+    <p class="sub">A genuine Bulgarian origin story for premium tea, hospitality and gifting.</p>
+  </div>
+</div>
+
+<div class="slide photo-slide" data-duration="8" style="--photo:url('assets/rose-valley/rose-valley-12.jpg'); --pos:50% 46%;">
+  <div class="photo-bg"></div>
+  <div class="photo-copy">
+    <div class="kicker">Natural Botanical Beauty</div>
+    <h2>The flower behind<br>the cup.</h2>
+    <div class="cn-big">一杯茶背后的真实花朵</div>
+    <p class="sub">Real rose buds, natural floral aroma and careful craft from Bulgaria.</p>
+  </div>
+</div><div class="slide split" data-duration="9">
   <div>
     <div class="kicker">Pure · Certified · Natural</div>
     <h2>Only real botanicals.<br>No artificial flavor.</h2>
