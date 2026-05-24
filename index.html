@@ -21,10 +21,55 @@
   .tagrow{margin-top:34px;display:flex;gap:16px;flex-wrap:wrap}.tag{padding:12px 22px;border-radius:999px;background:rgba(216,180,90,.14);border:1px solid rgba(216,180,90,.40);color:#f0cc75;font-size:27px;font-weight:900}
   .watermark{position:fixed;right:44px;bottom:30px;z-index:8;color:rgba(255,255,255,.32);font-size:24px;letter-spacing:4px;text-shadow:0 6px 20px rgba(0,0,0,.7)}
   .progress{position:fixed;left:0;bottom:0;height:5px;background:linear-gradient(90deg,#d48696,#d8b45a);z-index:20;width:0%}
+  .offer .photo{position:absolute;inset:0;background-image:var(--photo);background-size:cover;background-position:var(--pos,50% 50%);filter:saturate(1.1) contrast(1.06) brightness(.48);transform:scale(1.04)}
+  .offer:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(6,2,3,.95) 0%,rgba(24,7,12,.82) 44%,rgba(57,15,28,.45) 100%),radial-gradient(circle at 75% 44%,rgba(212,134,150,.32),transparent 34%),radial-gradient(circle at 22% 78%,rgba(216,180,90,.20),transparent 28%)}
+  .offer-copy{position:absolute;z-index:2;left:82px;top:92px;max-width:980px;text-shadow:0 12px 38px rgba(0,0,0,.70)}
+  .offer .brand{font-size:30px;letter-spacing:7px;color:#d8b45a;font-weight:900;margin-bottom:48px}.offer .brand span{color:#d48696}
+  .offer .kicker{font-size:31px;margin-bottom:34px}.offer h1{font-size:104px;line-height:1.03}.offer .cn{margin-top:24px;font-size:54px;line-height:1.14;color:#d48696;font-weight:900}.offer .sub{margin-top:30px;font-size:36px;line-height:1.36;color:#eadfd3;max-width:900px}
+  .price-panel{position:absolute;z-index:3;right:86px;top:130px;width:610px;border-radius:50px;padding:52px 56px;background:linear-gradient(155deg,rgba(18,8,9,.92),rgba(82,21,36,.88));border:1px solid rgba(216,180,90,.38);box-shadow:0 32px 100px rgba(0,0,0,.58),inset 0 1px 0 rgba(255,255,255,.12)}
+  .price-panel .label{font-size:36px;color:#d8b45a;font-weight:900;letter-spacing:4px}.price-panel .original{margin-top:44px;font-size:44px;color:#cdbfb5}.price-panel .original span{text-decoration:line-through;text-decoration-thickness:4px;text-decoration-color:#d48696}.price-panel .special{margin-top:28px;font-size:36px;color:#d48696;font-weight:900}.price-panel .price{font-size:154px;line-height:.92;font-weight:900;color:#fff4e9;letter-spacing:-5px}.price-panel .price small{font-size:58px;color:#d8b45a;letter-spacing:0}.price-panel .save{display:inline-block;margin-top:24px;padding:15px 28px;border-radius:999px;background:linear-gradient(90deg,#d48696,#d8b45a);color:#170b0b;font-size:31px;font-weight:900}.gift{margin-top:30px;padding-top:28px;border-top:1px solid rgba(216,180,90,.28);font-size:30px;line-height:1.36;color:#f7efe6}.gift b{color:#f0cc75}.fineprint{margin-top:16px;font-size:24px;color:#cdbfb5;line-height:1.34}
 </style>
 </head>
 <body>
-  <div class="slide promo active" data-duration="11"><img src="promos/rose-oil-real-product-promo-1920x1080.png" alt="保加利亚玫瑰精油"></div>
+  <div class="slide offer active" data-duration="10" style="--photo:url('assets/rose-valley/rose-valley-07.jpg');--pos:50% 48%">
+    <div class="photo"></div>
+    <section class="offer-copy">
+      <div class="brand"><span>TFTea</span> · TRÉSOR DE FLEUR</div>
+      <div class="kicker">杭州展会今日特惠</div>
+      <h1>Bulgarian<br>Rose Oil</h1>
+      <div class="cn">保加利亚玫瑰精油 · 1ml</div>
+      <p class="sub">A precious souvenir from Bulgaria's Rose Valley — elegant, natural and easy to take home.</p>
+      <div class="tagrow"><span class="tag">1ml</span><span class="tag">Bulgarian Origin</span><span class="tag">Today Only</span></div>
+    </section>
+    <aside class="price-panel">
+      <div class="label">TODAY PRICE · 今日价</div>
+      <div class="original">Original Price 原价 <span>¥120</span></div>
+      <div class="special">Expo Special 展会特价</div>
+      <div class="price"><small>¥</small>80</div>
+      <div class="save">Save ¥40 · 立省40元</div>
+    </aside>
+  </div>
+
+  <div class="slide offer" data-duration="11" style="--photo:url('assets/rose-valley/rose-valley-01.jpg');--pos:50% 45%">
+    <div class="photo"></div>
+    <section class="offer-copy">
+      <div class="brand"><span>TFTea</span> · TRÉSOR DE FLEUR</div>
+      <div class="kicker">杭州展会礼品装特惠</div>
+      <h1>Premium<br>Rose Oil</h1>
+      <div class="cn">保加利亚玫瑰精油 · 5ml</div>
+      <p class="sub">Pure rose luxury for beauty, aroma and wellness rituals — with a free TFTea blend gift.</p>
+      <div class="tagrow"><span class="tag">5ml</span><span class="tag">Gift Box</span><span class="tag">Free Tea Gift</span></div>
+    </section>
+    <aside class="price-panel">
+      <div class="label">TODAY PRICE · 今日价</div>
+      <div class="original">Original Price 原价 <span>¥418</span></div>
+      <div class="special">Expo Special 展会特价</div>
+      <div class="price"><small>¥</small>338</div>
+      <div class="save">Save ¥80 · 立省80元</div>
+      <div class="gift"><b>Free gift:</b> choose one TFTea blend you like</div>
+      <div class="fineprint">Excludes Pure Rose Buds and Bulgarian Trinity.<br>赠送喜欢的茶饮一款；玫瑰花苞与保加利亚三宝除外。</div>
+    </aside>
+  </div>
 
   <div class="slide valley" data-duration="7" style="--photo:url('assets/rose-valley/rose-valley-07.jpg');--pos:50% 48%">
     <div class="photo"></div><div class="copy"><div class="kicker">保加利亚玫瑰谷</div><h1>真实玫瑰产地</h1><p>阳光、清晨与玫瑰花田，成就天然花香。</p><div class="tagrow"><span class="tag">原产地</span><span class="tag">天然花香</span><span class="tag">甄选品质</span></div></div>
